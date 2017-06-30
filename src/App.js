@@ -9,13 +9,26 @@ class App extends Component {
   constructor(props)
   {
     super(props);
-    this.state = {abc:1,xyz:2};
+      
+      
+   var db =[];
+      
+    if(localStorage.getItem('db')==null)
+    {
+      
+      localStorage.setItem('db',JSON.stringify(db));
+       
+    }
+      
+      db = JSON.parse(localStorage.getItem('db'));
+    //this.state = {abc:1,xyz:2,data:db,table:""};
+   
+      this.state={data:db};
+      this.saveData=this.saveData.bind(this);
+      console.log(this.state.table);
+          
   }
 
-   al()
-  {
-    alert("you clicked");
-  }
 
   changeText(b,e)
   {
@@ -35,17 +48,28 @@ class App extends Component {
 
   saveData(e)
   {
-    if(localStorage.getItem('db')==undefined)
+    var db =[];
+      
+    if(localStorage.getItem('db')==null)
     {
-      var db =[];
+      
       localStorage.setItem('db',JSON.stringify(db));
+        db = JSON.parse(localStorage.getItem('db'));
     }
-
-    db.push({name: e.state.name, place: e.state.place, contact : e.state.contact});
+     db = JSON.parse(localStorage.getItem('db'));
+    console.log(db);
+    db.push({name: this.state.name, place: this.state.place, contact : this.state.contact});
+      
     localStorage.setItem('db',JSON.stringify(db));
+      
+    this.setState({data:db});
+      console.log(this.state.db);
+      
+      
 
   }
   render() {
+      var table = this.state.data;
     return (
       <div className="App">
         <div className="App-header">
@@ -62,6 +86,19 @@ class App extends Component {
         <input type="text" placeholder="contact" value={this.state.contact} onChange={(e) =>this.changeText("contact",e)}/> <br/>
         <input type="button" value="submit" onClick={this.saveData}/>
         </form>
+    <br/>
+            <table><thead>
+                    
+                        <td>Name</td> <td>Place</td> <td>contact</td>
+                        {
+                            table.map(function(table){
+                                return <tr><td>{table.name}</td><td>{table.place}</td><td>{table.contact}</td></tr>;
+                                
+                            })
+                        }
+                    </thead>
+                       
+            </table>
       </div>
 
     );
